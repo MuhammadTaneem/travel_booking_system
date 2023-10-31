@@ -9,12 +9,14 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+from datetime import timedelta
+
+from django.conf import settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -25,8 +27,8 @@ SECRET_KEY = 'django-insecure-&z4j!0@3vmjtp_i4+_v&$rmu=cf+4ckrw15pip!+r!n(zpobb#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -37,9 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'custom_users',
     'tour_package',
     'booking',
+    'corsheaders',
+    'rest_framework',
+    'tauth',
+    'rest_framework.authtoken',
+    # 'rest_framework_jwt',
+
     # 'tour_package.tour_schedule',
 ]
 
@@ -47,6 +56,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -54,7 +64,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'traveler.urls'
-
+CORS_ALLOW_ALL_ORIGINS = True
+SITE_ID = 1
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -73,7 +84,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'traveler.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -88,16 +98,19 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
+
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        # 'OPTIONS': {
+        #     'min_length': 6,
+        # }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -106,7 +119,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -119,16 +131,129 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 AUTH_USER_MODEL = 'custom_users.CustomUser'
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'tauth.authentication.TAuthJWTAuthentication',
+    ),
+}
+
+#
+# DJOSER = {
+#     'LOGIN_FIELD': 'email',
+#     'SEND_ACTIVATION_EMAIL': True,
+#     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+#     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+#     'ACTIVATION_URL': 'activate/{uid}/{token}',
+#     'SEND_CONFIRMATION_EMAIL': True,
+#     'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+#     'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
+#     'SERIALIZERS': {
+#         "user_create": "custom_users.serializers.CustomUserSerializer",
+#         'user': 'custom_users.serializers.CustomUserSerializer',
+#         'user_delete': 'custom_users.serializers.CustomUserSerializer',
+#
+#     },
+# }
+# AUTHENTICATION_BACKENDS = [
+#     'django.contrib.auth.backends.ModelBackend',
+#     'django.contrib.auth.backends.AllowAllUsersModelBackend',
+# ]
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:8000',
+    'http://localhost:4200',
+
+)
+# AUTHENTICATION_BACKENDS = [
+#     'django.contrib.auth.backends.AllowAllUsersModelBackend',
+#     # 'django.contrib.auth.backends.AllowAllUsersRemoteUserBackend',
+# ]
+
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(days=90),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=90),
+#     'ROTATE_REFRESH_TOKENS': True,
+#     'BLACKLIST_AFTER_ROTATION': True,
+#     'AUTH_HEADER_TYPES': ('jwt',),
+# }
+
+# import datetime
+# import jwt
+
+TAUTH = {
+    'login_field': 'email',
+    'algorithm': 'HS256',
+    'access_token_life_time': timedelta(minutes=10),
+    'active_token_life_time': timedelta(minutes=10),
+    'reset_token_life_time': timedelta(minutes=10),
+    'is_active_required': False,
+    'account_disabled_message': 'User account is disabled',
+    'login_url': 'http://localhost:4200/login/',
+    'active_user_url': 'http://localhost:4200/active/?token=',
+    'reset_password_url': 'http://localhost:4200/reset/?token=',
+    'password_min_length': 6,
+    #     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+    #     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    #     'ACTIVATION_URL': 'activate/{uid}/{token}',
+    #     'SEND_CONFIRMATION_EMAIL': True,
+    #     'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+    #     'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
+    #     'SERIALIZERS': {
+    #         "user_create": "custom_users.serializers.CustomUserSerializer",
+    #         'user': 'custom_users.serializers.CustomUserSerializer',
+    #         'user_delete': 'custom_users.serializers.CustomUserSerializer',
+    #
+    #     },
+}
+
+# Replace with your own secret key
+# JWT_SECRET_KEY = 'your-secret-key'
+
+# JWT token expiration time (adjust as needed)
+# JWT_EXPIRATION_DELTA = datetime.timedelta(hours=1)
+#
+# # JWT token refresh expiration time (adjust as needed)
+# JWT_REFRESH_EXPIRATION_DELTA = datetime.timedelta(days=7)
+
+# SMTP Email Backend
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+# SMTP Server and Port
+EMAIL_HOST = 'your-smtp-server.com'
+EMAIL_PORT = 587  # Use the appropriate port for your email service provider
+
+# Email Authentication
+EMAIL_HOST_USER = 'your-email@example.com'  # Your email address
+EMAIL_HOST_PASSWORD = 'your-email-password'  # Your email password
+
+# Use TLS (Secure Connection)
+EMAIL_USE_TLS = True
+
+# Use SSL (Secure Connection)
+# EMAIL_USE_SSL = True  # Use this if your email provider requires SSL
+
+# Default "From" Address for Outgoing Emails
+DEFAULT_FROM_EMAIL = 'your-email@example.com'
+
+
+# SMTP Email Backend
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'famouswebdeveloper@gmail.com'  # Your email address
+EMAIL_HOST_PASSWORD = 'zzdjlscpwsggtrdl'  # Your email password

@@ -18,7 +18,6 @@ class TourPackageSerializer(serializers.ModelSerializer):
             'end_date',
             'daily_limit',
             'is_active',
-            'is_paid',
             'location',
             'duration',
             'policy',

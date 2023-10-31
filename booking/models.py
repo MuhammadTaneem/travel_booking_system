@@ -8,6 +8,7 @@ class Booking(models.Model):
     tour_package = models.ForeignKey(TourPackage, on_delete=models.CASCADE)
     date = models.DateField()
     no_of_person = models.IntegerField()
+    is_paid = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     last_edited = models.DateTimeField(auto_now=True)
 

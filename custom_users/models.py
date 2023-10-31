@@ -21,21 +21,16 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email, user_type, phone_number, password, **extra_fields)
 
-class CustomUser(AbstractBaseUser, PermissionsMixin):
-    USER_TYPE_CHOICES = (
-        ('customer', 'Customer'),
-        ('counter', 'Counter'),
-        ('manager', 'Manager'),
-    )
 
+class CustomUser(AbstractBaseUser, PermissionsMixin):
+    first_name = models.CharField(null=True, blank=True)
+    last_name = models.CharField(null=True, blank=True)
     email = models.EmailField(unique=True)
-    # user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES)
     user_type = models.CharField(max_length=20, choices=[(choice.name, choice.value) for choice in UserType])
     phone_number = models.CharField(max_length=15, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
-
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
