@@ -66,6 +66,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'traveler.urls'
 CORS_ALLOW_ALL_ORIGINS = True
 SITE_ID = 1
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -108,9 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        # 'OPTIONS': {
-        #     'min_length': 6,
-        # }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -151,53 +149,17 @@ REST_FRAMEWORK = {
     ),
 }
 
-#
-# DJOSER = {
-#     'LOGIN_FIELD': 'email',
-#     'SEND_ACTIVATION_EMAIL': True,
-#     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-#     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
-#     'ACTIVATION_URL': 'activate/{uid}/{token}',
-#     'SEND_CONFIRMATION_EMAIL': True,
-#     'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-#     'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
-#     'SERIALIZERS': {
-#         "user_create": "custom_users.serializers.CustomUserSerializer",
-#         'user': 'custom_users.serializers.CustomUserSerializer',
-#         'user_delete': 'custom_users.serializers.CustomUserSerializer',
-#
-#     },
-# }
-# AUTHENTICATION_BACKENDS = [
-#     'django.contrib.auth.backends.ModelBackend',
-#     'django.contrib.auth.backends.AllowAllUsersModelBackend',
-# ]
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',
     'http://localhost:4200',
 
 )
-# AUTHENTICATION_BACKENDS = [
-#     'django.contrib.auth.backends.AllowAllUsersModelBackend',
-#     # 'django.contrib.auth.backends.AllowAllUsersRemoteUserBackend',
-# ]
-
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(days=90),
-#     'REFRESH_TOKEN_LIFETIME': timedelta(days=90),
-#     'ROTATE_REFRESH_TOKENS': True,
-#     'BLACKLIST_AFTER_ROTATION': True,
-#     'AUTH_HEADER_TYPES': ('jwt',),
-# }
-
-# import datetime
-# import jwt
 
 TAUTH = {
     'login_field': 'email',
     'algorithm': 'HS256',
-    'access_token_life_time': timedelta(minutes=10),
+    'access_token_life_time': timedelta(minutes=120),
     'active_token_life_time': timedelta(minutes=10),
     'reset_token_life_time': timedelta(minutes=10),
     'is_active_required': False,
@@ -206,49 +168,7 @@ TAUTH = {
     'active_user_url': 'http://localhost:4200/active/?token=',
     'reset_password_url': 'http://localhost:4200/reset/?token=',
     'password_min_length': 6,
-    #     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-    #     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
-    #     'ACTIVATION_URL': 'activate/{uid}/{token}',
-    #     'SEND_CONFIRMATION_EMAIL': True,
-    #     'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-    #     'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
-    #     'SERIALIZERS': {
-    #         "user_create": "custom_users.serializers.CustomUserSerializer",
-    #         'user': 'custom_users.serializers.CustomUserSerializer',
-    #         'user_delete': 'custom_users.serializers.CustomUserSerializer',
-    #
-    #     },
 }
-
-# Replace with your own secret key
-# JWT_SECRET_KEY = 'your-secret-key'
-
-# JWT token expiration time (adjust as needed)
-# JWT_EXPIRATION_DELTA = datetime.timedelta(hours=1)
-#
-# # JWT token refresh expiration time (adjust as needed)
-# JWT_REFRESH_EXPIRATION_DELTA = datetime.timedelta(days=7)
-
-# SMTP Email Backend
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-# SMTP Server and Port
-EMAIL_HOST = 'your-smtp-server.com'
-EMAIL_PORT = 587  # Use the appropriate port for your email service provider
-
-# Email Authentication
-EMAIL_HOST_USER = 'your-email@example.com'  # Your email address
-EMAIL_HOST_PASSWORD = 'your-email-password'  # Your email password
-
-# Use TLS (Secure Connection)
-EMAIL_USE_TLS = True
-
-# Use SSL (Secure Connection)
-# EMAIL_USE_SSL = True  # Use this if your email provider requires SSL
-
-# Default "From" Address for Outgoing Emails
-DEFAULT_FROM_EMAIL = 'your-email@example.com'
-
 
 # SMTP Email Backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -256,4 +176,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'famouswebdeveloper@gmail.com'  # Your email address
-EMAIL_HOST_PASSWORD = '********'  # Your email password
+# EMAIL_HOST_PASSWORD = '********'  # Your email password
+EMAIL_HOST_PASSWORD = 'zzdjlscpwsggtrdl'  # Your email password

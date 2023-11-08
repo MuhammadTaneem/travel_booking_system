@@ -1,6 +1,7 @@
 from django.db import models
 from custom_users.models import CustomUser
 from tour_package.models import TourPackage
+from traveler.enum import BookingStatus
 
 
 class Booking(models.Model):
@@ -8,7 +9,7 @@ class Booking(models.Model):
     tour_package = models.ForeignKey(TourPackage, on_delete=models.CASCADE)
     date = models.DateField()
     no_of_person = models.IntegerField()
-    is_paid = models.BooleanField(default=False)
+    status = models.CharField(max_length=20, choices=BookingStatus.choices, default=BookingStatus.unpaid)
     created_at = models.DateTimeField(auto_now_add=True)
     last_edited = models.DateTimeField(auto_now=True)
 

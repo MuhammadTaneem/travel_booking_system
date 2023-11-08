@@ -1,6 +1,6 @@
 import jwt
 import datetime
-# from django.contrib.auth import get_user_model
+
 from django.conf import settings
 from django.template.loader import render_to_string
 from rest_framework import status
@@ -8,28 +8,13 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth.hashers import check_password
+from tauth.authentication import t_auth_active_token_verify, t_auth_reset_token_verify
+from tauth.dependencis import email_sender
+from tauth.serializers import *
+from tauth.enum import TokenType
 
-from .authentication import t_auth_active_token_verify, t_auth_reset_token_verify
-from .dependencis import email_sender
-from .serializers import *
-from .enum import TokenType
-from django.contrib.sites.models import Site
-import pkg_resources
-
-
-# template_path = pkg_resources.resource_filename('tauth', 'emails/active_user.html')
-
-# create user x
-# login x
-# logout x
-# get_profile x
-# update_profile x
-# update email x
-# active user x
-# resend_activation x
-# password_change x
-# forget_password x
-# forget_password Confirmation x
+conf_class = ConfData()
+config_data = conf_class.get_data()
 
 
 @api_view(['POST'])
@@ -39,16 +24,11 @@ def user_login(request):
     username_field = user_model.USERNAME_FIELD
     username = request.data.get(username_field)
     password = request.data.get('password')
-    is_active_required = getattr(settings, 'TAUTH', {}).get('is_active_required', False)
-    account_disabled_message = getattr(settings, 'TAUTH', {}).get('account_disabled_message',
-                                                                  'Your account is disabled')
-    invalid_credentials_message = getattr(settings, 'TAUTH', {}).get('invalid_credentials_message', 'Invalid '
-                                                                                                    'credentials')
+    is_active_required = config_data['is_active_required']
+    account_disabled_message = config_data['messages']['account_disabled_message']
+    invalid_credentials_message = config_data['messages']['invalid_credentials_message']
+    user_dos_not_exist_message = config_data['messages']['user_dos_not_exist_message']
 
-    user_dos_not_exist_message = getattr(settings, 'TAUTH', {}).get('invalid_credentials_message',
-                                                                    'User does not exist')
-
-    # import pdb;pdb.set_trace()
     user = user_model.objects.filter(**{username_field: username}).first()
     if user is not None:
         if (user.is_active and is_active_required) or is_active_required is False:
@@ -141,18 +121,15 @@ def update_email(request):
 
 def token_generator(user_id, token_type):
     try:
-        token_life_time = datetime.timedelta(minutes=10)
+        token_life_time = datetime.timedelta(minutes=1)
         print(token_type)
-        algorithm = getattr(settings, 'TAUTH', {}).get('algorithm', 'HS256')
+        algorithm = config_data['algorithm']
         if token_type.access:
-            token_life_time = getattr(settings, 'TAUTH', {}).get('access_token_life_time',
-                                                                 datetime.timedelta(minutes=10))
+            token_life_time = config_data['access_token_life_time']
         elif token_type.active:
-            token_life_time = getattr(settings, 'TAUTH', {}).get('active_token_life_time',
-                                                                 datetime.timedelta(minutes=10))
+            token_life_time = config_data['active_token_life_time']
         elif token_type.reset:
-            token_life_time = getattr(settings, 'TAUTH', {}).get('reset_token_life_time',
-                                                                 datetime.timedelta(minutes=10))
+            token_life_time = config_data['reset_token_life_time']
         payload = {
             'id': user_id,
             'exp': datetime.datetime.utcnow() + token_life_time,
@@ -167,10 +144,11 @@ def token_generator(user_id, token_type):
 def send_activation_email(email, user_id):
     try:
         token = token_generator(user_id=user_id, token_type=TokenType.active)
-        active_user_url = getattr(settings, 'TAUTH', {}).get('active_user_url')
-        context = {'activation_url': active_user_url + token}
+        active_user_url = config_data['urls']['active_user_url']
+        context = {'activation_url': active_user_url + token, 'logo_url': config_data['logo_url']}
         template_path = 'emails/active_user.html'
         html_content = render_to_string(template_path, context)
+        # import pdb;pdb.set_trace()
         return email_sender(email=email, body=html_content, subject='User Activation Email')
     except:
         return False
@@ -206,7 +184,7 @@ def active_user(request):
         serializer = ActiveUserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            login_url = getattr(settings, 'TAUTH', {}).get('login_url')
+            login_url = config_data['urls']['login_url']
             return Response({'message': 'Your account is activated. Please login', 'login_url': login_url},
                             status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -225,8 +203,9 @@ def send_reset_password_email(request):
     try:
 
         token = token_generator(user_id=user.id, token_type=TokenType.reset)
-        reset_password_url = getattr(settings, 'TAUTH', {}).get('reset_password_url')
-        context = {'reset_password_url': reset_password_url + token}
+        reset_password_url = config_data['urls']['reset_password_url']
+        logo_url = config_data['logo_url']
+        context = {'reset_password_url': reset_password_url + token, 'logo_url': logo_url}
         template_path = 'emails/reset_password.html'
         html_content = render_to_string(template_path, context)
         response = email_sender(email=email, body=html_content, subject='Reset Password')

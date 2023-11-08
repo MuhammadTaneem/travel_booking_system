@@ -1,9 +1,7 @@
 import re
-
-from rest_framework import serializers, exceptions
+from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from django.contrib.auth.password_validation import validate_password
-from django.conf import settings
+from tauth.config import ConfData
 
 User = get_user_model()
 
@@ -53,24 +51,27 @@ class UserEmailUpdate(BaseUserSerializer):
 
 
 def new_password_validator(password):
-    password_min_length = getattr(settings, 'TAUTH', {}).get('password_min_length', 6)
-    isCapital = True
-    isSpecial = True
-    isDigit = True
+    conf_class = ConfData()
+    config_data = conf_class.get_data()
+
+    password_min_length = config_data['password']['min_length']
+    # isCapital = True
+    # isSpecial = True
+    # isDigit = True
     error_messages = []
 
-    if len(password) < password_min_length:
+    if len(password) < config_data['password']['min_length']:
         error_messages.append(f'password should be at least {password_min_length} Characters.')
-    if not any(char.isdigit() for char in password) and isDigit:
+    if not any(char.isdigit() for char in password) and config_data['password']['is_digit']:
         error_messages.append(f'password should be at least one Digit.')
 
         # Check if the password contains an uppercase letter
-    if not any(char.isupper() for char in password) and isCapital:
+    if not any(char.isupper() for char in password) and config_data['password']['is_capital']:
         error_messages.append(f'password should be at least one capital letter.')
 
         # Check if the password contains a special character
     special_characters = re.compile(r'[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]')
-    if not special_characters.search(password) and isSpecial:
+    if not special_characters.search(password) and config_data['password']['is_special']:
         error_messages.append(f'password should be at least one special character.')
     return error_messages
 

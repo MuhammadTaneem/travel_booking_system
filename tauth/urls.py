@@ -1,6 +1,6 @@
 # auth_api/urls.py
 from django.urls import path
-from .views import *
+from tauth.views import *
 
 app_name = 'tauth'
 urlpatterns = [

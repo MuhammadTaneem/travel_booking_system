@@ -24,3 +24,8 @@ class TourPackageSerializer(serializers.ModelSerializer):
             'created_at',
             'last_edited',
         ]
+
+    def perform_update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save(partial=True)

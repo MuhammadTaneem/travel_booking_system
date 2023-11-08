@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
-
 from traveler.enum import UserType
 
 
@@ -26,7 +25,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(null=True, blank=True)
     last_name = models.CharField(null=True, blank=True)
     email = models.EmailField(unique=True)
-    user_type = models.CharField(max_length=20, choices=[(choice.name, choice.value) for choice in UserType])
+    user_type = models.CharField(max_length=20, choices=UserType.choices, default=UserType.customer)
     phone_number = models.CharField(max_length=15, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
