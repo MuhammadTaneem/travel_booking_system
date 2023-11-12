@@ -27,7 +27,7 @@ class BookingListCreateView(BookingBaseView, generics.ListCreateAPIView):
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(status=BookingStatus.unpaid, customer=self.request.user)
+        serializer.save(status=BookingStatus.up_coming, customer=self.request.user)
 
 
 class BookingDetailView(BookingBaseView, generics.RetrieveAPIView):

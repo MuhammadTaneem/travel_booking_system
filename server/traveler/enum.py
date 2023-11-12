@@ -8,8 +8,8 @@ class UserType(TextChoices):
 
 
 class BookingStatus(TextChoices):
-    paid = 'Paid'
-    unpaid = 'Un Paid'
+    up_coming = 'Up coming'
+    confirmed = 'Confirmed'
     canceled = 'Canceled'
     ongoing = 'Ongoing'
     done = 'Done'
