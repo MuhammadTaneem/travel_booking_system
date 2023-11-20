@@ -1,0 +1,32 @@
+
+.example-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.example-header-label {
+  font-size: 1.5em;
+}
+
+mat-select{
+  max-width: min-content;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin; /* Firefox */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px; /* WebKit (Chrome, Safari, Edge) */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color of the scrollbar thumb */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #f1f1f1; /* Color of the scrollbar track */
+}

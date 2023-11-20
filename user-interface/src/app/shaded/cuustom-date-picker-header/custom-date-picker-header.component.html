@@ -1,0 +1,23 @@
+<div class="example-header mb-5">
+
+  <button mat-icon-button (click)="previousClicked('month')">
+    <mat-icon>west</mat-icon>
+  </button>
+
+  <select [(ngModel)]="selectedMonth" (ngModelChange)="onMonthChange()"
+          class="appearance-none  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-700 placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+    <option *ngFor="let month of months" [value]="month.value">{{ month.viewValue }}</option>
+  </select>
+
+
+  <select [(ngModel)]="selectedYear" (ngModelChange)="onChangeYear()"
+          class="ms-2 custom-scrollbar text-center  appearance-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+    <option *ngFor="let year of years" [value]="year" >{{ year }}</option>
+  </select>
+
+
+  <button mat-icon-button (click)="nextClicked('month')">
+    <mat-icon>east</mat-icon>
+  </button>
+
+</div>

@@ -1,0 +1,83 @@
+<div class="slider_box">
+  <div class="relative h_slide_show overflow-hidden">
+    <button *ngIf="currentImageIndex!=0" (click)="prevImage()" type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
+        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+            <svg class="w-4 h-4 text-white  rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+            </svg>
+            <span class="sr-only">Previous</span>
+        </span>
+    </button>
+
+    <img
+      *ngFor="let image of images; let i = index"
+      [src]="image"
+      alt="Image {{ i + 1 }}"
+      class="absolute w-full h-full transition-opacity duration-1000 object-cover"
+      [class.opacity-100]="i === currentImageIndex"
+      [class.opacity-0]="i !== currentImageIndex"
+    />
+
+    <button  *ngIf="currentImageIndex!=this.images.length-1" (click)="nextImage()" type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
+        <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+            <svg class="w-4 h-4 text-white  rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+            </svg>
+            <span class="sr-only">Next</span>
+        </span>
+    </button>
+
+    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+    <span
+      *ngFor="let image of images; let i = index"
+      [ngStyle]="{'background-color': i === currentImageIndex ? 'white' : 'gray'}"
+      class="w-4 h-4 rounded-full dark:bg-gray-800/30 cursor-pointer"
+      (click)="goToImage(i)"
+    ></span>
+
+    </div>
+  </div>
+</div>
+
+<!--<div class="md:container md:mx-auto my-8">-->
+
+
+<!--  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  gap-4 text-center m-5">-->
+<!--    <select id="countries" class="border border-gray-50 text-sm rounded-lg focus:ring-blue-500  block w-full px-3  dark:border-gray-200 dark:placeholder-gray-400 dark:text-black ">-->
+<!--      <option selected>Choose a location</option>-->
+<!--      <option value="US">United States</option>-->
+<!--      <option value="CA">Canada</option>-->
+<!--      <option value="FR">France</option>-->
+<!--      <option value="DE">Germany</option>-->
+<!--    </select>-->
+<!--    <mat-form-field>-->
+<!--      <mat-label>Choose a date</mat-label>-->
+<!--      <input matInput [matDatepicker]="picker">-->
+<!--      <mat-datepicker-toggle matIconPrefix [for]="picker">-->
+<!--        <mat-icon color="red" matDatepickerToggleIcon>calendar_month</mat-icon>-->
+<!--      </mat-datepicker-toggle>-->
+<!--      <mat-datepicker [calendarHeaderComponent]="CustomDatePickerHeaderComponent"  #picker></mat-datepicker>-->
+<!--    </mat-form-field>-->
+<!--    <div class="buttons flex justify-center ">-->
+<!--      <label class="relative inline-flex items-center me-5 cursor-pointer">-->
+<!--        <input type="checkbox" value="" class="sr-only peer" checked>-->
+<!--        <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-teal-300 dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-teal-600"></div>-->
+<!--        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Teal</span>-->
+<!--      </label>-->
+<!--      <label class="relative inline-flex items-center me-5 cursor-pointer">-->
+<!--        <input type="checkbox" value="" class="sr-only peer" checked>-->
+<!--        <div class="w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-green-300 dark:peer-focus:ring-green-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>-->
+<!--        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Green</span>-->
+<!--      </label>-->
+<!--    </div>-->
+
+
+<!--  </div>-->
+
+
+<!--</div>-->
+
+<div class="tour_package_box">
+  <app-tour-package></app-tour-package>
+</div>
+
